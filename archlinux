@@ -9,3 +9,63 @@
 
 (Source : https://wiki.archlinux.fr/Cr%C3%A9er_une_clef_USB_avec_l%27ISO_Arch_Linux)
 
+## Installation
+
+https://wiki.archlinux.org/index.php/installation_guide
+
+### Wifi network configuration
+
+- Find the network interfaces to use for wireless by listing all network interfaces for wireless hardware
+root@archiso # iw dev  
+
+- Write the configuration configuration /etc/wpa_supplicant.conf 
+
+network={
+  ssid="SSID"
+  scan_ssidwpa-=1
+  key_mgmt=WPA-PSK
+  psk="PASSPHRASE"
+}
+ 
+- wpa_suplicant -iwpl.. -c/etc/wpa_supplicant.conf -d
+
+### Partitioning
+
+- Run : 
+root@archiso #gdisk /dev/sda to know which type of partition table is used :
+  - Master Boot Record
+  - GUID Partition Table
+
+- Discrete partitions
+  - /boot /dev/sda1 EFI SYSTEM 1GiB)
+  - / /dev/sda2 Linux 100GiB
+  - /SWAP /dev/sda3 Linux Swap 8 GiB
+  - /home /dev/sda4 Linux Remainder
+ 
+ After writing the new partition table we need to reboot 
+  
+ - Format patitions
+   # mkfs.fat -F32 /dev/sda1
+   # mkfs.ext4 /dev/sda2
+   # mkfs.ext4 /dev/sda4
+   
+   # mkswap /dev/sda3 
+   # swapon /dev/sda3
+   
+  Sources : 
+  https://wiki.archlinux.org/index.php/Partitioning
+  http://jlk.fjfi.cvut.cz/arch/manpages/man/file-hierarchy.
+  
+  - mount the filesystems
+    - mount /dev/sda2 /
+    - mkdir /mnt/boot && mount /dev/sda1 /boot
+    - mkdir /mnt/home && mount /dev/sda4 /home
+    
+  => genfstab will later detect mounted file systems and swap space. 
+  
+  
+  
+
+
+
+
