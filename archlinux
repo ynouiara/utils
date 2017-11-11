@@ -1,0 +1,11 @@
+# Commands used to install ArchLinux
+
+## Download iso image
+
+- Download the iso image and the bootstrap tarball from here : https://www.archlinux.org/download/
+- Don't forget to check for integrity sha1sum 
+
+## Create USB boot 
+
+(Source : https://wiki.archlinux.fr/Cr%C3%A9er_une_clef_USB_avec_l%27ISO_Arch_Linux)
+
