@@ -22,17 +22,23 @@ root@archiso # iw dev
 
 network={
   ssid="SSID"
-  scan_ssidwpa-=1
+  scan_ssid-=1
   key_mgmt=WPA-PSK
   psk="PASSPHRASE"
 }
  
-- wpa_suplicant -iwpl.. -c/etc/wpa_supplicant.conf -d
+root@archiso # wpa_suplicant -iwpl.. -c/etc/wpa_supplicant.conf -d
+# if all is ok run wpa_supplicant in backgrount
+root@archiso # wpa_suplicant -iwpl.. -c/etc/wpa_supplicant.conf -B
+root@archiso # systemctl restart dhcpcd
+#check network activity with 
+root@archiso # curl -v https://www.archlinux.org
+
 
 ### Partitioning
 
 - Run : 
-root@archiso #gdisk /dev/sda to know which type of partition table is used :
+gdisk /dev/sda to know which type of partition table is used :
   - Master Boot Record
   - GUID Partition Table
 
@@ -57,13 +63,31 @@ root@archiso #gdisk /dev/sda to know which type of partition table is used :
   http://jlk.fjfi.cvut.cz/arch/manpages/man/file-hierarchy.
   
   - mount the filesystems
-    - mount /dev/sda2 /
+    - mount /dev/sda2 /mnt
     - mkdir /mnt/boot && mount /dev/sda1 /boot
     - mkdir /mnt/home && mount /dev/sda4 /home
     
   => genfstab will later detect mounted file systems and swap space. 
   
-  
+### Installation
+
+- mirror configuration    
+
+### - Bootloader 
+
+root@archiso # arch-chroot /mnt
+[root@archiso /]# pacman -S grub efibootmgr
+[root@archiso /]# grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=arch_grub --recheck
+[root@archiso /]# pacman -S intel-ucode
+[root@archiso /]# grub-mkconfig -o /boot/grub/grub.cfg
+
+Sources : 
+- https://wiki.archlinux.fr/GRUB#Syst.C3.A8mes_UEFI
+- https://wiki.archlinux.org/index.php/GRUB
+### PostInstallation
+
+
+
   
 
 
