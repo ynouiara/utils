@@ -84,10 +84,89 @@ root@archiso # arch-chroot /mnt
 Sources : 
 - https://wiki.archlinux.fr/GRUB#Syst.C3.A8mes_UEFI
 - https://wiki.archlinux.org/index.php/GRUB
+
 ### PostInstallation
 
+Source : https://wiki.archlinux.org/index.php/General_recommendations
 
+#### Some reading before to go further
 
+https://wiki.archlinux.org/index.php/Users_and_groups#Group_list
+https://wiki.archlinux.org/index.php/Systemd#Basic_systemctl_usage
+https://wiki.archlinux.org/index.php/Pacman/Tips_and_tricks
+
+#### Users and groups management 
+
+Source : https://wiki.archlinux.org/index.php/Users_and_groups#User_management
+
+- list users currently logged on the system with : 
+> who
+ 
+- list all existing user accounts including their properties stored in the user database with : 
+> passwd -Sa # as root.
+ 
+- Add a new user 
+> useradd -m -G wheel -s /bin/bash newuser
+
+- Add a user to a other groups 
+> usermod -aG additional_groups username
+ Or with gpasswd where the user can be added (removed) from one group a a time :
+> gpasswd --add username group
+ 
+ Read and try to remember as much as you can : https://wiki.archlinux.org/index.php/Users_and_groups#Group_list
+
+#### Wifi configuration at boot
+
+- Create the wpa_supplicant configuration for the wireless network interface : /etc/wpa_supplicant/wpa_supplicant-interface.conf
+
+ctrl_interface=/run/wpa_supplicant
+ctrl_interface_group=wheel
+update_config=1
+ap_scan=1
+network={
+  ssid="SSID"
+  scan_ssid-=1
+  key_mgmt=WPA-PSK
+  psk="PASSPHRASE"
+}
+
+- use dhcpcd hook to use wpa_supplicant when launching dhcpc on the wireless network interface
+> ln -s /usr/share/dhcpcd/hooks/10-wpa_supplicant /usr/lib/dhcpcd/dhcpcd-hooks/
+
+- Don't forget to secure your wpa_supplicat interface configuration 
+> chmod 600 /etc/wpa_supplicant/wpa_supplicant-interface.conf
+
+TODO : add the wpa_suplicant configuration for other networks
+
+#### Network Wired connection
+
+Configure it.
+ 
+#### Display Server : Serveur X
+
+Sources :  
+ - https://wiki.archlinux.org/index.php/General_recommendations#Display_server
+ - https://wiki.archlinux.fr/Startx
+
+> pacman -S xorg xorg xorg-init worg-twn xorg-xclock xterm xorg-server 
+
+#### display manager OR startx
+
+A display manager, or login manager, is typically a graphical user interface 
+that is displayed at the end of the boot process in place of the default shell
+
+Or startx
+
+https://wiki.archlinux.fr/Startx
+
+Tips :
+
+Check /etc/fstab by comparing UUID in /etc/fstab and ls -l  /dev/disk/by-uuid/*
+
+#### Install a window manager:  awesome
+
+A window manager (WM) is system software that controls the placement and appearance of windows within a windowing system in 
+a graphical user interface (GUI). It can be part of a desktop environment (DE) or be used standalone. 
   
 
 
